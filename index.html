@@ -85,9 +85,11 @@
 
     <input type="file" id="image1Input" accept="image/*" title="رفع الصورة المراد إضافة الشعار لها">
     
-    <!-- استعراض ملفات القوالب -->
-    <input type="file" id="templateInput" accept="image/*" title="اختر القالب">
-    
+    <!-- قائمة منسدلة لاختيار الصورة الثانية -->
+    <select id="templateList" title="اختر القالب">
+        <option value="" disabled selected>اختر القالب</option>
+    </select>
+
     <div class="button-container">
         <button onclick="mergeImages()">دمج الصور</button>
         <a id="downloadLink" download="merged_image.png">
@@ -100,14 +102,27 @@
     <script>
         let image1;
         let image2;
-        const templateInput = document.getElementById('templateInput');
+        const templateList = document.getElementById('templateList');
+
+        // تحميل قائمة القوالب من ملف list.json
+        fetch('list.json')
+            .then(response => response.json())
+            .then(data => {
+                data.template.forEach(template => {
+                    const option = document.createElement('option');
+                    option.value = template;
+                    option.text = template;
+                    templateList.appendChild(option);
+                });
+            });
 
         function mergeImages() {
             const image1Input = document.getElementById('image1Input');
+            const selectedTemplate = templateList.value;
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
-            if (!image1Input.files[0] || !templateInput.files[0]) {
+            if (!image1Input.files[0] || !selectedTemplate) {
                 console.error('الرجاء تحديد كل الصور.');
                 return;
             }
@@ -126,7 +141,7 @@
 
                     reader2.onload = function () {
                         image2 = new Image();
-                        image2.src = reader2.result;
+                        image2.src = selectedTemplate;
 
                         image2.onload = function () {
                             // تأخير تنفيذ الدمج بضعة لحظات للتأكد من تحميل الصورة الثانية
@@ -137,7 +152,7 @@
                         };
                     };
 
-                    reader2.readAsDataURL(templateInput.files[0]);
+                    reader2.readAsDataURL(image1Input.files[0]);
                 };
             };
 
