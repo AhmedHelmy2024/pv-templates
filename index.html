@@ -110,7 +110,7 @@
             .then(data => {
                 data.template.forEach(template => {
                     const option = document.createElement('option');
-                    option.value = `template/${template}`;
+                    option.value = template;
                     option.text = template;
                     templateList.appendChild(option);
                 });
