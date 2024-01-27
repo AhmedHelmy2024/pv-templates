@@ -29,7 +29,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        select {
+        input {
             margin-top: 10px;
             width: 80%;
             padding: 10px;
@@ -83,8 +83,10 @@
 <body>
     <h1>IMAGE MERGI - PV LOGO </h1>
 
-    <select id="image2Select" title="اختر الشعار">
-        <!-- خيارات القائمة المنسدلة ستظهر هنا -->
+    <input type="file" id="image1Input" accept="image/*" title="رفع الصورة الأساسية">
+    
+    <select id="templateSelect" title="اختر قالبًا">
+        <option value="">-- اختر قالبًا --</option>
     </select>
 
     <div class="button-container">
@@ -98,32 +100,21 @@
 
     <script>
         let image1;
-        let image2Select = document.getElementById('image2Select');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-
-        // Fetch the list.json file and populate the dropdown options
-        fetch('https://ahmedhelmy2024.github.io/pv-templates/list.json')
-            .then(response => response.json())
-            .then(data => {
-                data.template.forEach(template => {
-                    const option = document.createElement('option');
-                    option.value = template;
-                    option.text = template;
-                    image2Select.appendChild(option);
-                });
-            });
+        let image2;
 
         function mergeImages() {
             const image1Input = document.getElementById('image1Input');
-            const image2Path = 'https://ahmedhelmy2024.github.io/pv-templates/' + image2Select.value;
+            const templateSelect = document.getElementById('templateSelect');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
 
-            if (!image1Input.files[0]) {
-                console.error('الرجاء تحديد الصورة الأساسية.');
+            if (!image1Input.files[0] || !templateSelect.value) {
+                console.error('الرجاء تحديد الصورة الأساسية واختيار قالب.');
                 return;
             }
 
             const reader1 = new FileReader();
+            const reader2 = new FileReader();
 
             reader1.onload = function (e) {
                 image1 = new Image();
@@ -134,13 +125,18 @@
                     canvas.height = image1.height;
                     ctx.drawImage(image1, 0, 0);
 
-                    image2 = new Image();
-                    image2.src = image2Path;
+                    reader2.onload = function (e) {
+                        image2 = new Image();
+                        image2.src = e.target.result;
 
-                    image2.onload = function () {
-                        ctx.drawImage(image2, 0, 0, image1.width, image1.height);
-                        saveMergedImage();
+                        image2.onload = function () {
+                            ctx.drawImage(image2, 0, 0, image1.width, image1.height);
+                            saveMergedImage();
+                        };
                     };
+
+                    const selectedTemplate = templateSelect.value;
+                    reader2.readAsDataURL(selectedTemplate);
                 };
             };
 
@@ -148,6 +144,7 @@
         }
 
         function saveMergedImage() {
+            const canvas = document.getElementById('canvas');
             const downloadLink = document.getElementById('downloadLink');
 
             const dataURL = canvas.toDataURL('image/png');
@@ -155,6 +152,25 @@
             downloadLink.style.display = 'block';
             console.log('تم دمج الصور بنجاح.');
         }
+        
+        function populateTemplateList() {
+            const templateSelect = document.getElementById('templateSelect');
+
+            // Replace the URL with the correct path to your list.json file
+            fetch('https://ahmedhelmy2024.github.io/pv-templates/list.json')
+                .then(response => response.json())
+                .then(data => {
+                    data.template.forEach(template => {
+                        const option = document.createElement('option');
+                        option.value = template;
+                        option.text = template;
+                        templateSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching template list:', error));
+        }
+
+        populateTemplateList();
     </script>
 
     <h6>Programmed by Ahmed Helmy</h6>
