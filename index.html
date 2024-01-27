@@ -5,83 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Merging - PV LOGO</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-            background-color: #f8f8f8;
-            color: #333;
-        }
-
-        h1 {
-            background-color: #00344d;
-            color: #ffffff;
-            padding: 20px;
-            margin: 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        #canvas {
-            border: 2px solid #00bef1;
-            max-width: 100%;
-            margin-top: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        input {
-            margin-top: 10px;
-            width: 80%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #fff;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-
-        button {
-            flex: 1;
-            margin: 0 5px;
-            padding: 12px 24px;
-            background-color: #00bef1;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #008ac9;
-        }
-
-        #downloadLink {
-            display: none;
-            margin-top: 10px;
-        }
-
-        h6 {
-            margin-top: 20px;
-            color: #333;
-            font-size: 12px;
-        }
-
-        p {
-            color: #333;
-            font-size: 14px;
-            margin-top: 20px;
-            line-height: 1.5;
-        }
+        /* ... الأنماط الحالية ... */
     </style>
 </head>
 <body>
     <h1>IMAGE MERGI - PV LOGO </h1>
+
+    <select id="templateSelect">
+        <!-- سيتم إضافة الخيارات هنا ديناميكياً -->
+    </select>
 
     <input type="file" id="image1Input" accept="image/*" title="رفع الصورةالمراد إضافة الشعار لها ">
     <input type="file" id="image2Input" accept="image/*" title="رفع الشعار لبروتين فيتامين">
@@ -107,6 +39,14 @@
 
             if (!image1Input.files[0] || !image2Input.files[0]) {
                 console.error('الرجاء تحديد كلا الصورتين.');
+                return;
+            }
+
+            const templateSelect = document.getElementById('templateSelect');
+            const selectedTemplate = templateSelect.value;
+
+            if (!selectedTemplate) {
+                console.error('الرجاء تحديد قالب.');
                 return;
             }
 
@@ -148,8 +88,25 @@
             downloadLink.style.display = 'block';
             console.log('تم دمج الصور بنجاح.');
         }
+
+        // تحميل القوالب من ملف list.json
+        async function loadTemplates() {
+            const response = await fetch('list.json');
+            const data = await response.json();
+            const templateSelect = document.getElementById('templateSelect');
+
+            data.templates.forEach(template => {
+                const option = document.createElement('option');
+                option.value = template;
+                option.text = template;
+                templateSelect.add(option);
+            });
+        }
+
+        // قم بتحميل القوالب عند تحميل الصفحة
+        window.onload = loadTemplates;
     </script>
 
-<h6>Programmed by Ahmed Helmy</h6>
+    <h6>Programmed by Ahmed Helmy</h6>
 </body>
 </html>
