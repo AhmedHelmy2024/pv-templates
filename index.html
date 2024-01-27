@@ -66,12 +66,6 @@
             margin-top: 10px;
         }
 
-        #logo {
-            width: 1cm;
-            height: 1cm;
-            margin-top: 20px;
-        }
-
         h6 {
             margin-top: 20px;
             color: #333;
@@ -105,10 +99,75 @@
 
     <canvas id="canvas"></canvas>
 
-    <img id="logo" src="template/100.png" alt="شعار" />
-
     <script>
-        // الكود الحالي...
+        let image1;
+        let image2;
+        const templateList = document.getElementById('templateList');
+
+        // تحميل قائمة القوالب من ملف list.json
+        fetch('list.json')
+            .then(response => response.json())
+            .then(data => {
+                data.template.forEach(template => {
+                    const option = document.createElement('option');
+                    option.value = template;
+                    option.text = template;
+                    templateList.appendChild(option);
+                });
+            });
+
+        function mergeImages() {
+            const image1Input = document.getElementById('image1Input');
+            const selectedTemplate = templateList.value;
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            if (!image1Input.files[0] || !selectedTemplate) {
+                console.error('الرجاء تحديد كل الصور.');
+                return;
+            }
+
+            const reader1 = new FileReader();
+            const reader2 = new FileReader();
+
+            reader1.onload = function (e) {
+                image1 = new Image();
+                image1.src = e.target.result;
+
+                image1.onload = function () {
+                    canvas.width = image1.width;
+                    canvas.height = image1.height;
+                    ctx.drawImage(image1, 0, 0);
+
+                    reader2.onload = function () {
+                        image2 = new Image();
+                        image2.src = selectedTemplate;
+
+                        image2.onload = function () {
+                            // تأخير تنفيذ الدمج بضعة لحظات للتأكد من تحميل الصورة الثانية
+                            setTimeout(() => {
+                                ctx.drawImage(image2, 0, 0, image1.width, image1.height);
+                                saveMergedImage();
+                            }, 100);
+                        };
+                    };
+
+                    reader2.readAsDataURL(image1Input.files[0]);
+                };
+            };
+
+            reader1.readAsDataURL(image1Input.files[0]);
+        }
+
+        function saveMergedImage() {
+            const canvas = document.getElementById('canvas');
+            const downloadLink = document.getElementById('downloadLink');
+
+            const dataURL = canvas.toDataURL('image/png');
+            downloadLink.href = dataURL;
+            downloadLink.style.display = 'block';
+            console.log('تم دمج الصور بنجاح.');
+        }
     </script>
 
     <h6>Trial version 1.1.07 | Ahmed Helmy</h6>
