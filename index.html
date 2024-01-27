@@ -78,15 +78,22 @@
             margin-top: 20px;
             line-height: 1.5;
         }
+
+        select {
+            margin-top: 10px;
+            width: 80%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
     <h1>IMAGE MERGI - PV LOGO </h1>
 
     <input type="file" id="image1Input" accept="image/*" title="رفع الصورة المراد إضافة الشعار لها">
-    <select id="image2Select" title="اختر صورة من القوالب">
-        <option selected disabled>اختر صورة من القوالب</option>
-    </select>
 
     <div class="button-container">
         <button onclick="mergeImages()">دمج الصور</button>
@@ -106,7 +113,7 @@
                 const response = await fetch('https://ahmedhelmy2024.github.io/pv-templates/list.json');
                 const data = await response.json();
 
-                const select = document.getElementById('image2Select');
+                const select = document.getElementById('templateSelect');
                 data.forEach((imageName) => {
                     const option = document.createElement('option');
                     option.text = imageName;
@@ -121,17 +128,17 @@
 
         function mergeImages() {
             const image1Input = document.getElementById('image1Input');
-            const image2Select = document.getElementById('image2Select');
+            const templateSelect = document.getElementById('templateSelect');
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
-            if (!image1Input.files[0] || !image2Select.value) {
+            if (!image1Input.files[0] || !templateSelect.value) {
                 console.error('الرجاء تحديد كلا الصورتين.');
                 return;
             }
 
             const reader1 = new FileReader();
-            const selectedImage = image2Select.value;
+            const selectedImage = templateSelect.value;
 
             reader1.onload = function (e) {
                 image1 = new Image();
