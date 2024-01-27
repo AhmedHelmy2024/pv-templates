@@ -78,54 +78,33 @@
             margin-top: 20px;
             line-height: 1.5;
         }
-
-        #browserSelect {
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
     <h2>MERGING - PV LOGO </h2>
 
-    <input type="file" id="image1Input" accept="image/*" title="Upload the image to add the logo to">
+    <input type="file" id="image1Input" accept="image/*" title="رفع الصورة المراد إضافة الشعار لها">
     
-    <!-- Dropdown list to choose the second image -->
-    <select id="templateList" title="Choose the template">
-        <option value="" disabled selected>Choose the template</option>
+    <!-- قائمة منسدلة لاختيار الصورة الثانية -->
+    <select id="templateList" title="اختر القالب">
+        <option value="" disabled selected>اختر القالب</option>
     </select>
 
     <div class="button-container">
-        <button onclick="mergeImages()">Merge Images</button>
+        <button onclick="mergeImages()">دمج الصور</button>
         <a id="downloadLink" download="merged_image.png">
-            <button>Download Merged Image</button>
+            <button>تحميل الصورة المدموجة</button>
         </a>
     </div>
 
     <canvas id="canvas"></canvas>
-
-    <!-- Browser selection dropdown -->
-    <div id="browserSelect">
-        <label for="browser">Choose a browser to open the page:</label>
-        <select id="browser">
-            <option value="chrome">Google Chrome</option>
-            <option value="firefox">Mozilla Firefox</option>
-            <option value="edge">Microsoft Edge</option>
-            <option value="safari">Safari</option>
-            <!-- Add more browsers as needed -->
-        </select>
-        <button onclick="openInSelectedBrowser()">Open Page</button>
-
-        <label for="otherBrowser">Or choose another browser:</label>
-        <input type="text" id="otherBrowser" placeholder="Enter browser scheme (e.g., mybrowser://)">
-        <button onclick="openInOtherBrowser()">Open Page</button>
-    </div>
 
     <script>
         let image1;
         let image2;
         const templateList = document.getElementById('templateList');
 
-        // Load the template list from list.json file
+        // تحميل قائمة القوالب من ملف list.json
         fetch('list.json')
             .then(response => response.json())
             .then(data => {
@@ -144,7 +123,7 @@
             const ctx = canvas.getContext('2d');
 
             if (!image1Input.files[0] || !selectedTemplate) {
-                console.error('Please select both images.');
+                console.error('الرجاء تحديد كل الصور.');
                 return;
             }
 
@@ -165,7 +144,7 @@
                         image2.src = selectedTemplate;
 
                         image2.onload = function () {
-                            // Delay the merging execution for a few moments to ensure the second image is loaded
+                            // تأخير تنفيذ الدمج بضعة لحظات للتأكد من تحميل الصورة الثانية
                             setTimeout(() => {
                                 ctx.drawImage(image2, 0, 0, image1.width, image1.height);
                                 saveMergedImage();
@@ -187,22 +166,7 @@
             const dataURL = canvas.toDataURL('image/png');
             downloadLink.href = dataURL;
             downloadLink.style.display = 'block';
-            console.log('Images merged successfully.');
-        }
-
-        function openInSelectedBrowser() {
-            const selectedBrowser = document.getElementById('browser').value;
-            openInBrowser(selectedBrowser);
-        }
-
-        function openInOtherBrowser() {
-            const otherBrowserScheme = document.getElementById('otherBrowser').value;
-            openInBrowser(otherBrowserScheme);
-        }
-
-        function openInBrowser(browserScheme) {
-            const pageURL = window.location.href;
-            window.open(`${browserScheme}://${pageURL}`);
+            console.log('تم دمج الصور بنجاح.');
         }
     </script>
 
