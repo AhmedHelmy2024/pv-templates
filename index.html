@@ -66,11 +66,6 @@
             margin-top: 10px;
         }
 
-        #logo {
-            max-width: 100%;
-            margin-top: 20px;
-        }
-
         h6 {
             margin-top: 20px;
             color: #333;
@@ -103,9 +98,6 @@
     </div>
 
     <canvas id="canvas"></canvas>
-
-    <!-- شعار أسفل الصفحة -->
-    <img id="logo" src="https://github.com/AhmedHelmy2024/pv-templates/raw/main/template/%D8%A3%D9%8A%D9%82%D9%88%D9%86%205.png" alt="شعار PV" />
 
     <script>
         let image1;
@@ -154,11 +146,7 @@
                         image2.onload = function () {
                             // تأخير تنفيذ الدمج بضعة لحظات للتأكد من تحميل الصورة الثانية
                             setTimeout(() => {
-                                const aspectRatio = image1.width / image1.height;
-                                const newWidth = image1.width > image1.height ? image1.width : image1.height * aspectRatio;
-                                const newHeight = image1.height > image1.width ? image1.height : image1.width / aspectRatio;
-
-                                ctx.drawImage(image2, 0, 0, newWidth, newHeight);
+                                ctx.drawImage(image2, 0, 0, image1.width, image1.height);
                                 saveMergedImage();
                             }, 100);
                         };
