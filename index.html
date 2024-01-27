@@ -139,13 +139,16 @@
                     canvas.height = image1.height;
                     ctx.drawImage(image1, 0, 0);
 
-                    reader2.onload = function (e) {
+                    reader2.onload = function () {
                         image2 = new Image();
                         image2.src = selectedTemplate;
 
                         image2.onload = function () {
-                            ctx.drawImage(image2, 0, 0, image1.width, image1.height);
-                            saveMergedImage();
+                            // تأخير تنفيذ الدمج بضعة لحظات للتأكد من تحميل الصورة الثانية
+                            setTimeout(() => {
+                                ctx.drawImage(image2, 0, 0, image1.width, image1.height);
+                                saveMergedImage();
+                            }, 100);
                         };
                     };
 
