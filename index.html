@@ -146,7 +146,11 @@
                         image2.onload = function () {
                             // تأخير تنفيذ الدمج بضعة لحظات للتأكد من تحميل الصورة الثانية
                             setTimeout(() => {
-                                ctx.drawImage(image2, 0, 0, image1.width, image1.height);
+                                const aspectRatio = image1.width / image1.height;
+                                const newWidth = image1.width > image1.height ? image1.width : image1.height * aspectRatio;
+                                const newHeight = image1.height > image1.width ? image1.height : image1.width / aspectRatio;
+
+                                ctx.drawImage(image2, 0, 0, newWidth, newHeight);
                                 saveMergedImage();
                             }, 100);
                         };
