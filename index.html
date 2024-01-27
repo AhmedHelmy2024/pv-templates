@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Merging - PV LOGO</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+        h1 {
+            background-color: #00344d;
+            color: #ffffff;
+            padding: 20px;
+            margin: 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #canvas {
+            border: 2px solid #00bef1;
+            max-width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            margin-top: 10px;
+            width: 80%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 12px 24px;
+            background-color: #00bef1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #008ac9;
+        }
+
+        #downloadLink {
+            display: none;
+            margin-top: 10px;
+        }
+
+        h6 {
+            margin-top: 20px;
+            color: #333;
+            font-size: 12px;
+        }
+
+        p {
+            color: #333;
+            font-size: 14px;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>IMAGE MERGI - PV LOGO </h1>
+
+    <input type="file" id="image1Input" accept="image/*" title="رفع الصورةالمراد إضافة الشعار لها ">
+    <input type="file" id="image2Input" accept="image/*" title="رفع الشعار لبروتين فيتامين">
+
+    <div class="button-container">
+        <button onclick="mergeImages()">دمج الصور</button>
+        <a id="downloadLink" download="merged_image.png">
+            <button>تحميل الصورة المدموجة</button>
+        </a>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        let image1;
+        let image2;
+
+        function mergeImages() {
+            const image1Input = document.getElementById('image1Input');
+            const image2Input = document.getElementById('image2Input');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            if (!image1Input.files[0] || !image2Input.files[0]) {
+                console.error('الرجاء تحديد كلا الصورتين.');
+                return;
+            }
+
+            const reader1 = new FileReader();
+            const reader2 = new FileReader();
+
+            reader1.onload = function (e) {
+                image1 = new Image();
+                image1.src = e.target.result;
+
+                image1.onload = function () {
+                    canvas.width = image1.width;
+                    canvas.height = image1.height;
+                    ctx.drawImage(image1, 0, 0);
+
+                    reader2.onload = function (e) {
+                        image2 = new Image();
+                        image2.src = e.target.result;
+
+                        image2.onload = function () {
+                            ctx.drawImage(image2, 0, 0, image1.width, image1.height);
+                            saveMergedImage();
+                        };
+                    };
+
+                    reader2.readAsDataURL(image2Input.files[0]);
+                };
+            };
+
+            reader1.readAsDataURL(image1Input.files[0]);
+        }
+
+        function saveMergedImage() {
+            const canvas = document.getElementById('canvas');
+            const downloadLink = document.getElementById('downloadLink');
+
+            const dataURL = canvas.toDataURL('image/png');
+            downloadLink.href = dataURL;
+            downloadLink.style.display = 'block';
+            console.log('تم دمج الصور بنجاح.');
+        }
+    </script>
+
+<h6>Programmed by Ahmed Helmy</h6>
+</body>
+</html>
