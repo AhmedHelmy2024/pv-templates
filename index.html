@@ -83,11 +83,8 @@
 <body>
     <h1>IMAGE MERGI - PV LOGO </h1>
 
-    <input type="file" id="image1Input" accept="image/*" title="رفع الصورة الأساسية">
-    
-    <select id="templateSelect" title="اختر قالبًا">
-        <option value="">-- اختر قالبًا --</option>
-    </select>
+    <input type="file" id="image1Input" accept="image/*" title="رفع الصورةالمراد إضافة الشعار لها ">
+    <input type="file" id="image2Input" accept="image/*" title="رفع الشعار لبروتين فيتامين">
 
     <div class="button-container">
         <button onclick="mergeImages()">دمج الصور</button>
@@ -104,12 +101,12 @@
 
         function mergeImages() {
             const image1Input = document.getElementById('image1Input');
-            const templateSelect = document.getElementById('templateSelect');
+            const image2Input = document.getElementById('image2Input');
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
-            if (!image1Input.files[0] || !templateSelect.value) {
-                console.error('الرجاء تحديد الصورة الأساسية واختيار قالب.');
+            if (!image1Input.files[0] || !image2Input.files[0]) {
+                console.error('الرجاء تحديد كلا الصورتين.');
                 return;
             }
 
@@ -135,8 +132,7 @@
                         };
                     };
 
-                    const selectedTemplate = templateSelect.value;
-                    reader2.readAsDataURL(selectedTemplate);
+                    reader2.readAsDataURL(image2Input.files[0]);
                 };
             };
 
@@ -152,27 +148,8 @@
             downloadLink.style.display = 'block';
             console.log('تم دمج الصور بنجاح.');
         }
-        
-        function populateTemplateList() {
-            const templateSelect = document.getElementById('templateSelect');
-
-            // Replace the URL with the correct path to your list.json file
-            fetch('https://ahmedhelmy2024.github.io/pv-templates/list.json')
-                .then(response => response.json())
-                .then(data => {
-                    data.template.forEach(template => {
-                        const option = document.createElement('option');
-                        option.value = template;
-                        option.text = template;
-                        templateSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error fetching template list:', error));
-        }
-
-        populateTemplateList();
     </script>
 
-    <h6>Programmed by Ahmed Helmy</h6>
+<h6>Programmed by Ahmed Helmy</h6>
 </body>
 </html>
