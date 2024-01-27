@@ -83,11 +83,10 @@
 <body>
     <h1>IMAGE MERGI - PV LOGO </h1>
 
-    <input type="file" id="image1Input" accept="image/*" title="رفع الصورة المراد إضافة الشعار لها ">
-    <input type="file" id="image2Input" accept="image/*" title="رفع الشعار لبروتين فيتامين">
-
-    <label for="templateImageSelect">اختر صورة من مجلد القوالب: </label>
-    <select id="templateImageSelect"></select>
+    <input type="file" id="image1Input" accept="image/*" title="رفع الصورة المراد إضافة الشعار لها">
+    <select id="image2Select" title="اختر صورة من القوالب">
+        <option selected disabled>اختر صورة من القوالب</option>
+    </select>
 
     <div class="button-container">
         <button onclick="mergeImages()">دمج الصور</button>
@@ -102,18 +101,37 @@
         let image1;
         let image2;
 
+        async function fetchTemplateImages() {
+            try {
+                const response = await fetch('https://ahmedhelmy2024.github.io/pv-templates/list.json');
+                const data = await response.json();
+
+                const select = document.getElementById('image2Select');
+                data.forEach((imageName) => {
+                    const option = document.createElement('option');
+                    option.text = imageName;
+                    select.add(option);
+                });
+            } catch (error) {
+                console.error('Error fetching template images:', error);
+            }
+        }
+
+        fetchTemplateImages();
+
         function mergeImages() {
             const image1Input = document.getElementById('image1Input');
-            const image2Input = document.getElementById('image2Input');
+            const image2Select = document.getElementById('image2Select');
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
-            if (!image1Input.files[0]) {
-                console.error('الرجاء تحديد الصورة الأساسية.');
+            if (!image1Input.files[0] || !image2Select.value) {
+                console.error('الرجاء تحديد كلا الصورتين.');
                 return;
             }
 
             const reader1 = new FileReader();
+            const selectedImage = image2Select.value;
 
             reader1.onload = function (e) {
                 image1 = new Image();
@@ -124,34 +142,13 @@
                     canvas.height = image1.height;
                     ctx.drawImage(image1, 0, 0);
 
-                    // اختيار الصورة من مجلد القوالب
-                    const templatesFolder = 'https://ahmedhelmy2024.github.io/pv-templates/';
-                    const templateImageSelect = document.getElementById('templateImageSelect');
+                    image2 = new Image();
+                    image2.src = `https://ahmedhelmy2024.github.io/pv-templates/${selectedImage}`;
 
-                    // إذا تم اختيار صورة من مجلد القوالب
-                    if (templateImageSelect.value) {
-                        image2 = new Image();
-                        image2.src = templatesFolder + templateImageSelect.value;
-
-                        image2.onload = function () {
-                            ctx.drawImage(image2, 0, 0, image1.width, image1.height);
-                            saveMergedImage();
-                        };
-                    } else if (image2Input.files[0]) {
-                        // إذا تم اختيار ملف صورة
-                        const reader2 = new FileReader();
-                        reader2.onload = function (e) {
-                            image2 = new Image();
-                            image2.src = e.target.result;
-
-                            image2.onload = function () {
-                                ctx.drawImage(image2, 0, 0, image1.width, image1.height);
-                                saveMergedImage();
-                            };
-                        };
-
-                        reader2.readAsDataURL(image2Input.files[0]);
-                    }
+                    image2.onload = function () {
+                        ctx.drawImage(image2, 0, 0, image1.width, image1.height);
+                        saveMergedImage();
+                    };
                 };
             };
 
@@ -167,24 +164,6 @@
             downloadLink.style.display = 'block';
             console.log('تم دمج الصور بنجاح.');
         }
-
-        // إضافة تحديث للحقل الثاني
-        window.addEventListener('DOMContentLoaded', function () {
-            const templateImageSelect = document.getElementById('templateImageSelect');
-            
-            // استرجاع قائمة الصور من مجلد القوالب
-            fetch('https://ahmedhelmy2024.github.io/pv-templates/list.json')
-                .then(response => response.json())
-                .then(imagesList => {
-                    imagesList.forEach(image => {
-                        const option = document.createElement('option');
-                        option.value = image;
-                        option.text = image;
-                        templateImageSelect.appendChild(option);
-                    });
-                });
-        });
-
     </script>
 
     <h6>Programmed by Ahmed Helmy</h6>
