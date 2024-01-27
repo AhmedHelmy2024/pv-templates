@@ -77,6 +77,7 @@
             font-size: 14px;
             margin-top: 20px;
             line-height: 1.5;
+            color: green; /* لون رسالة النجاح */
         }
     </style>
 </head>
@@ -174,7 +175,7 @@
 
             // إضافة هذا السطر لعرض رسالة النجاح
             successMessage.innerHTML = 'تم تحميل الملف بنجاح!';
-            successMessage.style.color = 'green';
+            successMessage.style.display = 'block';
 
             console.log('تم دمج الصور بنجاح.');
         }
