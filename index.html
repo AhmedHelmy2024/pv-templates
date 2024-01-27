@@ -78,6 +78,10 @@
             margin-top: 20px;
             line-height: 1.5;
         }
+
+        #browserSelect {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -98,6 +102,19 @@
     </div>
 
     <canvas id="canvas"></canvas>
+
+    <!-- Browser selection dropdown -->
+    <div id="browserSelect">
+        <label for="browser">Choose a browser to open the page:</label>
+        <select id="browser">
+            <option value="chrome">Google Chrome</option>
+            <option value="firefox">Mozilla Firefox</option>
+            <option value="edge">Microsoft Edge</option>
+            <option value="safari">Safari</option>
+            <!-- Add more browsers as needed -->
+        </select>
+        <button onclick="openInSelectedBrowser()">Open Page</button>
+    </div>
 
     <script>
         let image1;
@@ -167,6 +184,29 @@
             downloadLink.href = dataURL;
             downloadLink.style.display = 'block';
             console.log('Images merged successfully.');
+        }
+
+        function openInSelectedBrowser() {
+            const selectedBrowser = document.getElementById('browser').value;
+            const pageURL = window.location.href;
+
+            switch (selectedBrowser) {
+                case 'chrome':
+                    window.open(`googlechrome://${pageURL}`);
+                    break;
+                case 'firefox':
+                    window.open(`firefox://${pageURL}`);
+                    break;
+                case 'edge':
+                    window.open(`microsoft-edge://${pageURL}`);
+                    break;
+                case 'safari':
+                    window.open(`safari://${pageURL}`);
+                    break;
+                // Add more cases for additional browsers if needed
+                default:
+                    console.error('Invalid browser selection.');
+            }
         }
     </script>
 
