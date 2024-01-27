@@ -93,8 +93,7 @@
     <div class="button-container">
         <button onclick="mergeImages()">دمج الصور</button>
         <a id="downloadLink" download="merged_image.png">
-            <!-- استخدام innerHTML بدلاً من value لتحديث نص الزر -->
-            <button>download</button>
+            <button>تحميل الصورة المدموجة</button>
         </a>
     </div>
 
@@ -164,14 +163,9 @@
             const canvas = document.getElementById('canvas');
             const downloadLink = document.getElementById('downloadLink');
 
-            // قم بتحديد مصدر الصورة بدون استخدام dataURL
             const dataURL = canvas.toDataURL('image/png');
             downloadLink.href = dataURL;
-
-            // قم بتحديث نص الزر لتحميل الصورة
-            downloadLink.innerHTML = '<button>تحميل الصورة المدموجة</button>';
             downloadLink.style.display = 'block';
-
             console.log('تم دمج الصور بنجاح.');
         }
     </script>
