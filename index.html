@@ -41,13 +41,13 @@
 
         .button-container {
             display: flex;
-            flex-direction: column; /* تحويل الزرين إلى توجيه عمودي */
+            justify-content: space-between;
             margin-top: 10px;
         }
 
         button {
-            margin-top: 10px; /* إضافة مسافة بين الزرين */
-            width: 80%; /* تعيين العرض بنسبة للشاشة */
+            flex: 1;
+            margin: 0 5px;
             padding: 12px 24px;
             background-color: #00bef1;
             color: white;
@@ -77,7 +77,6 @@
             font-size: 14px;
             margin-top: 20px;
             line-height: 1.5;
-            color: green; /* لون رسالة النجاح */
         }
     </style>
 </head>
@@ -99,9 +98,6 @@
     </div>
 
     <canvas id="canvas"></canvas>
-    
-    <!-- رسالة النجاح -->
-    <p id="successMessage"></p>
 
     <script>
         let image1;
@@ -114,7 +110,7 @@
             .then(data => {
                 data.template.forEach(template => {
                     const option = document.createElement('option');
-                    option.value = `template/${template}`;
+                    option.value = template;
                     option.text = template;
                     templateList.appendChild(option);
                 });
@@ -125,7 +121,6 @@
             const selectedTemplate = templateList.value;
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
-            const successMessage = document.getElementById('successMessage');
 
             if (!image1Input.files[0] || !selectedTemplate) {
                 console.error('الرجاء تحديد كل الصور.');
@@ -167,16 +162,10 @@
         function saveMergedImage() {
             const canvas = document.getElementById('canvas');
             const downloadLink = document.getElementById('downloadLink');
-            const successMessage = document.getElementById('successMessage');
 
             const dataURL = canvas.toDataURL('image/png');
             downloadLink.href = dataURL;
             downloadLink.style.display = 'block';
-
-            // إضافة هذا السطر لعرض رسالة النجاح
-            successMessage.innerHTML = 'تم تحميل الملف بنجاح!';
-            successMessage.style.display = 'block';
-
             console.log('تم دمج الصور بنجاح.');
         }
     </script>
