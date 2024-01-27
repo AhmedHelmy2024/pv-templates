@@ -114,6 +114,10 @@
             <!-- Add more browsers as needed -->
         </select>
         <button onclick="openInSelectedBrowser()">Open Page</button>
+
+        <label for="otherBrowser">Or choose another browser:</label>
+        <input type="text" id="otherBrowser" placeholder="Enter browser scheme (e.g., mybrowser://)">
+        <button onclick="openInOtherBrowser()">Open Page</button>
     </div>
 
     <script>
@@ -188,25 +192,17 @@
 
         function openInSelectedBrowser() {
             const selectedBrowser = document.getElementById('browser').value;
-            const pageURL = window.location.href;
+            openInBrowser(selectedBrowser);
+        }
 
-            switch (selectedBrowser) {
-                case 'chrome':
-                    window.open(`googlechrome://${pageURL}`);
-                    break;
-                case 'firefox':
-                    window.open(`firefox://${pageURL}`);
-                    break;
-                case 'edge':
-                    window.open(`microsoft-edge://${pageURL}`);
-                    break;
-                case 'safari':
-                    window.open(`safari://${pageURL}`);
-                    break;
-                // Add more cases for additional browsers if needed
-                default:
-                    console.error('Invalid browser selection.');
-            }
+        function openInOtherBrowser() {
+            const otherBrowserScheme = document.getElementById('otherBrowser').value;
+            openInBrowser(otherBrowserScheme);
+        }
+
+        function openInBrowser(browserScheme) {
+            const pageURL = window.location.href;
+            window.open(`${browserScheme}://${pageURL}`);
         }
     </script>
 
