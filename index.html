@@ -83,9 +83,8 @@
 <body>
     <h1>IMAGE MERGI - PV LOGO </h1>
 
-    <select id="templateSelect" title="اختر قالبًا">
-        <!-- الخيارات ستتم إضافتها هنا تلقائيًا عند تحميل الصفحة -->
-    </select>
+    <input type="file" id="image1Input" accept="image/*" title="رفع الصورةالمراد إضافة الشعار لها ">
+    <input type="file" id="image2Input" accept="image/*" title="رفع الشعار لبروتين فيتامين">
 
     <div class="button-container">
         <button onclick="mergeImages()">دمج الصور</button>
@@ -99,35 +98,20 @@
     <script>
         let image1;
         let image2;
-        let templateSelect = document.getElementById('templateSelect');
-
-        window.onload = function () {
-            fetchTemplates();
-        };
-
-        async function fetchTemplates() {
-            const response = await fetch('https://ahmedhelmy2024.github.io/pv-templates/list.json');
-            const templates = await response.json();
-
-            templates.forEach(template => {
-                let option = document.createElement('option');
-                option.value = template.path;
-                option.text = template.name;
-                templateSelect.add(option);
-            });
-        }
 
         function mergeImages() {
             const image1Input = document.getElementById('image1Input');
+            const image2Input = document.getElementById('image2Input');
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
-            if (!image1Input.files[0] || !templateSelect.value) {
-                console.error('الرجاء تحديد الصورة الأساسية واختيار قالب.');
+            if (!image1Input.files[0] || !image2Input.files[0]) {
+                console.error('الرجاء تحديد كلا الصورتين.');
                 return;
             }
 
             const reader1 = new FileReader();
+            const reader2 = new FileReader();
 
             reader1.onload = function (e) {
                 image1 = new Image();
@@ -138,25 +122,21 @@
                     canvas.height = image1.height;
                     ctx.drawImage(image1, 0, 0);
 
-                    loadImageTemplate(templateSelect.value);
+                    reader2.onload = function (e) {
+                        image2 = new Image();
+                        image2.src = e.target.result;
+
+                        image2.onload = function () {
+                            ctx.drawImage(image2, 0, 0, image1.width, image1.height);
+                            saveMergedImage();
+                        };
+                    };
+
+                    reader2.readAsDataURL(image2Input.files[0]);
                 };
             };
 
             reader1.readAsDataURL(image1Input.files[0]);
-        }
-
-        function loadImageTemplate(templatePath) {
-            const image2 = new Image();
-
-            image2.onload = function () {
-                const canvas = document.getElementById('canvas');
-                const ctx = canvas.getContext('2d');
-
-                ctx.drawImage(image2, 0, 0, canvas.width, canvas.height);
-                saveMergedImage();
-            };
-
-            image2.src = `https://ahmedhelmy2024.github.io/pv-templates/${templatePath}`;
         }
 
         function saveMergedImage() {
