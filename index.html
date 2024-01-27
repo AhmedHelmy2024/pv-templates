@@ -84,8 +84,10 @@
     <h1>IMAGE MERGI - PV LOGO </h1>
 
     <input type="file" id="image1Input" accept="image/*" title="رفع الصورة المراد إضافة الشعار لها">
-    <input type="file" id="templateInput" accept="image/*" directory="" webkitdirectory="" title="اختر مجلد القوالب">
-
+    
+    <!-- استعراض ملفات القوالب -->
+    <input type="file" id="templateInput" accept="image/*" title="اختر القالب">
+    
     <div class="button-container">
         <button onclick="mergeImages()">دمج الصور</button>
         <a id="downloadLink" download="merged_image.png">
@@ -98,15 +100,15 @@
     <script>
         let image1;
         let image2;
+        const templateInput = document.getElementById('templateInput');
 
         function mergeImages() {
             const image1Input = document.getElementById('image1Input');
-            const templateInput = document.getElementById('templateInput');
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
 
             if (!image1Input.files[0] || !templateInput.files[0]) {
-                console.error('الرجاء تحديد كل الصور ومجلد القوالب.');
+                console.error('الرجاء تحديد كل الصور.');
                 return;
             }
 
